@@ -30,6 +30,7 @@ public class Main {
         task1.setStatus("DONE");
         managerOfTasks.updateTask(task1);
         epic2.setStatus("IN_PROGRESS");
+        managerOfTasks.updateSubTask(subTask3);
 
         System.out.println(managerOfTasks.getTaskList());
         System.out.println(managerOfTasks.getEpicList());

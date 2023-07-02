@@ -151,6 +151,7 @@ public class ManagerOfTasks {
 
         int epicId = subTask.getEpicId();
         Epic epic = epics.get(epicId);
+        subTask.setStatus(epic.getStatus());
         updateEpicStatus(epic);
     }
 
