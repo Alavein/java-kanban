@@ -1,23 +1,21 @@
-package Tasks;
-
-import Tasks.Task;
+package tasks;
 
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    protected ArrayList<Integer> subTaskId = new ArrayList<>();
+    protected ArrayList<Integer> subTaskIds = new ArrayList<>();
 
     public Epic(String title, String content) {
         super(title, content);
     }
 
     public ArrayList<Integer> getSubTaskId() {
-        return subTaskId;
+        return subTaskIds;
     }
 
     public void setSubTaskId(ArrayList<Integer> subTaskId) {
-        this.subTaskId = subTaskId;
+        this.subTaskIds = subTaskId;
     }
 
     @Override
@@ -30,3 +28,5 @@ public class Epic extends Task {
                 '}';
     }
 }
+
+

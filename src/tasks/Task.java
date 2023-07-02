@@ -1,0 +1,55 @@
+package tasks;
+
+import java.util.Objects;
+
+public class Task {
+    protected int id;
+    protected String title;
+    protected String content;
+
+    protected Status status = Status.NEW;
+
+    public Task(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && Objects.equals(title, task.title) && Objects.equals(content, task.content) && Objects.equals(status, task.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, content, status);
+    }
+}
