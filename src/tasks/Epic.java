@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    protected ArrayList<Integer> subTaskIds = new ArrayList<>();
+    private ArrayList<Integer> subTaskIds = new ArrayList<>();
 
-    public Epic(String title, String content) {
-        super(title, content);
+    public Epic(String title, String content, Status status) {
+        super(title, content, status);
     }
 
     public ArrayList<Integer> getSubTaskId() {

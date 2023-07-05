@@ -68,12 +68,12 @@ public class TaskManager {
         for (Integer subTaskId : epic.getSubTaskId()) {
             SubTask subTask = subTasks.get(subTaskId);
 
-            if (subTask.getStatus().equals(Status.NEW)) {
+            if (subTask.getStatus() == Status.NEW) {
                 epic.setStatus(Status.NEW);
-            } else if (subTask.getStatus().equals(Status.IN_PROGRESS)) {
+            } else if (subTask.getStatus() == Status.IN_PROGRESS) {
                 epic.setStatus(Status.IN_PROGRESS);
                 epicsStatuses.add(subTask.getStatus());
-            } else if (subTask.getStatus().equals(Status.DONE)) {
+            } else if (subTask.getStatus() == Status.DONE) {
                 epicsStatuses.add(subTask.getStatus());
             }
         }
@@ -81,7 +81,7 @@ public class TaskManager {
             int count = 0;
             int size = epicsStatuses.size();
 
-            if (status.equals(Status.DONE)) {
+            if (status == Status.DONE) {
                 count++;
             }
             if (count == size) {
