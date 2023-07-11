@@ -1,9 +1,9 @@
-import manager.TaskManager;
+import manager.InMemoryTaskManager;
 import tasks.*;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task1 = new Task("Отправиться путешествовать", "Поехать в другую страну", Status.NEW);
         Task task2 = new Task("Освоить что-то новое", "Научиться водить какой-нибудь транспорт", Status.NEW);
@@ -16,7 +16,8 @@ public class Main {
         taskManager.makeNewEpic(epic2);
 
         SubTask subTask1 = new SubTask("Получить визу", "Подготовить все документы",  Status.NEW, 3);
-        SubTask subTask2 = new SubTask("Забронировать отель", "Распечатать все документы",  Status.NEW, 3);
+        SubTask subTask2 = new SubTask("Забронировать отель", "Распечатать все документы",
+                Status.NEW, 3);
         taskManager.makeNewSubTask(subTask1);
         taskManager.makeNewSubTask(subTask2);
 
@@ -37,10 +38,24 @@ public class Main {
         System.out.println(taskManager.getEpicList());
         System.out.println(taskManager.getSubtaskList());
 
+        taskManager.getTaskById(2);
+        taskManager.getTaskById(1);
+        taskManager.getTaskById(2);
+        taskManager.getEpicById(3);
+        taskManager.getEpicById(4);
+        taskManager.getSubTaskById(5);
+
+        System.out.println("История задач:");
+        System.out.println(taskManager.getHistory());
+
         taskManager.deleteEpicById(3);
         taskManager.getSubtaskByEpicId(4);
 
         System.out.println(taskManager.getEpicList());
         System.out.println(taskManager.getSubtaskList());
+
+
+
+
     }
 }
