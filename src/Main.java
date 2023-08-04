@@ -39,9 +39,9 @@ public class Main {
         System.out.println(taskManager.getSubtaskList());
 
         taskManager.getTaskById(2);
+        taskManager.getEpicById(3);
         taskManager.getTaskById(1);
         taskManager.getTaskById(2);
-        taskManager.getEpicById(3);
         taskManager.getEpicById(4);
         taskManager.getSubTaskById(5);
 
@@ -49,13 +49,13 @@ public class Main {
         System.out.println(taskManager.getHistory());
 
         taskManager.deleteEpicById(3);
-        taskManager.getSubtaskByEpicId(4);
 
-        System.out.println(taskManager.getEpicList());
-        System.out.println(taskManager.getSubtaskList());
+        System.out.println("История задач после удаления Эпика:");
+        System.out.println(taskManager.getHistory());
 
-
-
+        taskManager.getTaskById(2);
+        System.out.println("История задач после нового запроса:");
+        System.out.println(taskManager.getHistory());
 
     }
 }
