@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private File file;
-    private String HEADER = "id, type, name, description, status, epic";
+    private static final String HEADER = "id, type, name, description, status, epic";
 
     public FileBackedTasksManager(String path) {
         super();
@@ -34,7 +34,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             fileWriter.write("\n");
             fileWriter.write(historyToString(super.historyManager));
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка. Файл не удалось сохранить." + e.getMessage());
+            throw new ManagerSaveException("Ошибка: Файл не удалось сохранить." + e.getMessage());
         }
     }
 
@@ -47,11 +47,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 stringsWithTasks.add(bufferedReader.readLine());
             }
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка. Файл не был считан.");
+            throw new ManagerSaveException("Ошибка: Файл не был считан.");
         }
 
         if (stringsWithTasks.isEmpty()) {
-            throw new ManagerSaveException("Ошибка. Файл пустой");
+            throw new ManagerSaveException("Ошибка: Файл пустой");
         }
 
         List<Integer> historyList = historyFromString(stringsWithTasks.get(stringsWithTasks.size() - 1));
