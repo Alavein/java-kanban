@@ -4,9 +4,11 @@ import tasks.*;
 
 import java.io.File;
 
+import static manager.FileBackedTasksManager.loadFromFile;
+
 public class Main {
     public static void main(String[] args) {
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+/*        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
 
         Task task1 = new Task("Отправиться путешествовать", "Поехать в другую страну", Status.NEW);
@@ -59,8 +61,49 @@ public class Main {
 
         taskManager.getTaskById(2);
         System.out.println("История задач после нового запроса:");
-        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getHistory());*/
 
+
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
+        Epic epicTask = new Epic("Путешествие", "Поездка в Португалию", Status.NEW);
+        fileBackedTasksManager.makeNewEpic(epicTask);
+        SubTask subtask1 = new SubTask("Составить список вещей", "Купить все по списку", Status.NEW, 3);
+        SubTask subtask2 = new SubTask("Подготовить документы", "Подготовить визу", Status.NEW, 3);
+
+
+        Epic epicTask2 = new Epic("Купить машину", "Выбрать модель машины", Status.NEW);
+        fileBackedTasksManager.makeNewEpic(epicTask2);
+        SubTask subtask3 = new SubTask("Найти диллера", "Выбрать машину в нужном магазине", Status.NEW, 4);
+
+
+        fileBackedTasksManager.makeNewSubTask(subtask1);
+        fileBackedTasksManager.makeNewSubTask(subtask2);
+        fileBackedTasksManager.makeNewSubTask(subtask3);
+
+        fileBackedTasksManager.makeNewTask(new Task("Менять жизнь к лучшему", "Идти на встречу переменам", Status.NEW));
+
+
+        System.out.println(fileBackedTasksManager.getEpicList());
+        System.out.println(fileBackedTasksManager.getSubtaskList());
+        System.out.println(fileBackedTasksManager.getTaskList());
+
+        fileBackedTasksManager.getSubTaskById(3);
+        fileBackedTasksManager.getSubTaskById(4);
+        fileBackedTasksManager.getEpicById(1);
+        fileBackedTasksManager.getEpicById(2);
+        fileBackedTasksManager.getSubTaskById(3);
+        fileBackedTasksManager.getSubTaskById(4);
+        fileBackedTasksManager.getEpicById(1);
+        fileBackedTasksManager.getEpicById(2);
+
+        fileBackedTasksManager.getHistory();
+
+
+        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("/Users/canta/dev/java-kanban/tasks.txt"));
+        fileBackedTasksManager2.getHistory();
+        System.out.println(fileBackedTasksManager2.getEpicList());
+        System.out.println(fileBackedTasksManager2.getSubtaskList());
+        System.out.println(fileBackedTasksManager.getTaskList());
 
     }
 }

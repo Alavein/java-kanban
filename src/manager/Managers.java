@@ -8,7 +8,7 @@ public class Managers {
     }
 
     public static TaskManager getDefault() {
-        return new InMemoryTaskManager();
+        return new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
     }
 
 }

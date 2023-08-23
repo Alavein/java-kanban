@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Epic extends Task {
 
     private ArrayList<Integer> subTaskIds = new ArrayList<>();
+    private Type type = Type.EPIC;
 
     public Epic(String title, String content, Status status) {
         super(title, content, status);
@@ -17,6 +18,11 @@ public class Epic extends Task {
     public void setSubTaskId(ArrayList<Integer> subTaskId) {
         this.subTaskIds = subTaskId;
     }
+
+    public Type getType() {
+        return type;
+    }
+
 
     @Override
     public String toString() {

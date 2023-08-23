@@ -7,11 +7,14 @@ public class Task {
     protected String title;
     protected String content;
     protected Status status;
+    private Type type = Type.TASK;
 
     public Task(String title, String content, Status status) {
         this.title = title;
         this.content = content;
         this.status = status;
+    }
+    public Task() {
     }
 
     public int getId() {
@@ -37,6 +40,11 @@ public class Task {
     public String getContent() {
         return content;
     }
+
+    public Type getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "Task{" +

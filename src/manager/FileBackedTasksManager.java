@@ -8,73 +8,79 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private File FILE;
+    private File file;
+    private String HEADER = "id, type, name, description, status, epic";
 
     public FileBackedTasksManager(String path) {
         super();
-        this.FILE = new File(path);
-    }
-
-    public FileBackedTasksManager() {
+        this.file = new File(path);
     }
 
     public void save() {
-        try (FileWriter fileWriter = new FileWriter(FILE, StandardCharsets.UTF_8)) {
-            fileWriter.write("id, type, name, description, status, epic" + "\n");
+        try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8)) {
+            fileWriter.write(HEADER + "\n");
             for (Task task : super.getTaskList()) {
                 fileWriter.write(toString(task) + "\n");
             }
             for (Epic epic : super.getEpicList()) {
-                fileWriter.write(toString(epic)  + "\n");
+                fileWriter.write(toString(epic) + "\n");
             }
             for (SubTask subTask : super.getSubtaskList()) {
-                fileWriter.write(toString(subTask)  + "\n");
+                fileWriter.write(toString(subTask) + "\n");
             }
             fileWriter.write("\n");
             fileWriter.write(historyToString(super.historyManager));
         } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка. Файл не удалось сохранить.");
+            throw new ManagerSaveException("Ошибка. Файл не удалось сохранить." + e.getMessage());
         }
     }
 
-    public static FileBackedTasksManager  loadFromFile(File FILE) {
-        List<String> strings = new ArrayList<>();
-        FileBackedTasksManager manager = new FileBackedTasksManager();
+    public static FileBackedTasksManager loadFromFile(File FILE) {
+        List<String> stringsWithTasks = new ArrayList<>();
+        FileBackedTasksManager manager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE, StandardCharsets.UTF_8))) {
             while (bufferedReader.ready()) {
-                strings.add(bufferedReader.readLine());
+                stringsWithTasks.add(bufferedReader.readLine());
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка. Файл не был считан.");
         }
 
-        if (strings.isEmpty()) {
+        if (stringsWithTasks.isEmpty()) {
             throw new ManagerSaveException("Ошибка. Файл пустой");
         }
 
-        List<Integer> historyList = historyFromString(strings.get(strings.size() - 1));
-        strings.remove(strings.size() - 1);
-        strings.remove(0);
+        List<Integer> historyList = historyFromString(stringsWithTasks.get(stringsWithTasks.size() - 1));
+        stringsWithTasks.remove(stringsWithTasks.size() - 1);
+        stringsWithTasks.remove(0);
 
         int generateId = 0;
 
-        for (String str : strings) {
+        for (String str : stringsWithTasks) {
             if (!str.isEmpty() || !str.isBlank()) {
                 Task task = manager.fromString(str);
+                if (task != null) {
+                    if (task.getId() > generateId) {
+                        generateId = task.getId();
+                    }
 
-                if (task.getId() > generateId) {
-                    generateId = task.getId();
-                }
-
-                if (task instanceof Epic) { //task.getType().equals(TaskType.EPICTASK)
-                    manager.epics.put(task.getId(), (Epic) task);
-                } else if (task instanceof SubTask) { //task.getType().equals(TaskType.SUBTASK)
-                    manager.subTasks.put(task.getId(), (SubTask) task);
-                } else {
-                    manager.tasks.put(task.getId(), task);
+                    switch (task.getType()) {
+                        case EPIC:
+                            manager.epics.put(task.getId(), (Epic) task);
+                            break;
+                        case SUBTASK:
+                            manager.subTasks.put(task.getId(), (SubTask) task);
+                            break;
+                        case TASK:
+                            manager.tasks.put(task.getId(), task);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -109,23 +115,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     private Task fromString(String value) {
+
         String[] newTask = value.split(", ");
-        if (newTask[1].equals("Task")) {
-            Task task = new Task(newTask[2], newTask[3], Status.getEnum(newTask[4]));
-            task.setId(Integer.parseInt(newTask[0]));
-            return task;
-        } else if (newTask[1].equals("SubTask")) {
-            SubTask subTask = new SubTask(newTask[2], newTask[3], Status.getEnum(newTask[4]), Integer.parseInt(newTask[5]));
-            subTask.setId(Integer.parseInt(newTask[0]));
-            return subTask;
-        } else {
-            Epic epic = new Epic(newTask[2], newTask[3], Status.getEnum(newTask[4]));
-            epic.setId(Integer.parseInt(newTask[0]));
-            return epic;
+        Task result = null;
+
+        if (Type.getEnumType(newTask[1]) != null) {
+            switch (Type.getEnumType(newTask[1])) {
+                case TASK:
+                    result = new Task(newTask[2], newTask[3], Status.getEnum(newTask[4]));
+                    result.setId(Integer.parseInt(newTask[0]));
+                    break;
+                case SUBTASK:
+                    result = new SubTask(newTask[2], newTask[3], Status.getEnum(newTask[4]), Integer.parseInt(newTask[5]));
+                    result.setId(Integer.parseInt(newTask[0]));
+                    break;
+                case EPIC:
+                    result = new Epic(newTask[2], newTask[3], Status.getEnum(newTask[4]));
+                    result.setId(Integer.parseInt(newTask[0]));
+                    break;
+                default:
+                    result = new Task();
+                    break;
+            }
         }
+        return result;
     }
 
-    static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         List<Task> history = manager.getHistory();
         StringBuilder str = new StringBuilder();
         if (!history.isEmpty()) {
@@ -140,7 +156,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return "";
     }
 
-    static List<Integer> historyFromString(String value) {
+    private static List<Integer> historyFromString(String value) {
         List<Integer> history = new ArrayList<>();
         if (!value.isEmpty()) {
             String[] lines = value.split(",");
@@ -222,51 +238,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         super.getSubtaskByEpicId(id);
         save();
         return super.getSubtaskByEpicId(id);
-    }
-
-
-    public static void main(String[] args) {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
-        Epic epicTask = new Epic("Путешествие", "Поездка в Португалию", Status.NEW);
-        fileBackedTasksManager.makeNewEpic(epicTask);
-        SubTask subtask1 = new SubTask("Составить список вещей", "Купить все по списку", Status.NEW, 3);
-        SubTask subtask2 = new SubTask("Подготовить документы", "Подготовить визу", Status.NEW, 3);
-
-
-        Epic epicTask2 = new Epic("Купить машину", "Выбрать модель машины", Status.NEW);
-        fileBackedTasksManager.makeNewEpic(epicTask2);
-        SubTask subtask3 = new SubTask("Найти диллера", "Выбрать машину в нужном магазине", Status.NEW,4);
-
-
-        fileBackedTasksManager.makeNewSubTask(subtask1);
-        fileBackedTasksManager.makeNewSubTask(subtask2);
-        fileBackedTasksManager.makeNewSubTask(subtask3);
-
-        fileBackedTasksManager.makeNewTask(new Task("Менять жизнь к лучшему", "Идти на встречу переменам", Status.NEW));
-
-
-        System.out.println(fileBackedTasksManager.getEpicList());
-        System.out.println(fileBackedTasksManager.getSubtaskList());
-        System.out.println(fileBackedTasksManager.getTaskList());
-
-        fileBackedTasksManager.getSubTaskById(3);
-        fileBackedTasksManager.getSubTaskById(4);
-        fileBackedTasksManager.getEpicById(1);
-        fileBackedTasksManager.getEpicById(2);
-        fileBackedTasksManager.getSubTaskById(3);
-        fileBackedTasksManager.getSubTaskById(4);
-        fileBackedTasksManager.getEpicById(1);
-        fileBackedTasksManager.getEpicById(2);
-
-        fileBackedTasksManager.getHistory();
-
-
-        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("/Users/canta/dev/java-kanban/tasks.txt"));
-        fileBackedTasksManager2.getHistory();
-        System.out.println(fileBackedTasksManager2.getEpicList());
-        System.out.println(fileBackedTasksManager2.getSubtaskList());
-        System.out.println(fileBackedTasksManager.getTaskList());
-
-
     }
 }
