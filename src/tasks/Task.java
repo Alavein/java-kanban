@@ -30,6 +30,13 @@ public class Task {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
+    }
     @Override
     public String toString() {
         return "Task{" +

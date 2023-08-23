@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int nextId = 1;
-    private Map<Integer, Task> tasks = new HashMap<>();
-    private Map<Integer, SubTask> subTasks = new HashMap<>();
-    private Map<Integer, Epic> epics = new HashMap<>();
+    private static int nextId = 1;
 
-    private HistoryManager historyManager = Managers.getDefaultHistory();
+    protected Map<Integer, Task> tasks = new HashMap<>();
+    protected Map<Integer, SubTask> subTasks = new HashMap<>();
+    protected Map<Integer, Epic> epics = new HashMap<>();
+
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public int makeNewTask(Task task) {
@@ -183,5 +184,19 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    public void addToHistory(int id) {
+        if(tasks.containsKey(id)) {
+            historyManager.addToHistoryTask(tasks.get(id));
+        } else if (epics.containsKey(id)) {
+            historyManager.addToHistoryTask(epics.get(id));
+        } else if (subTasks.containsKey(id)) {
+            historyManager.addToHistoryTask(subTasks.get(id));
+        }
+    }
+
+    public static void setGenerateId(int nextId) {
+        InMemoryTaskManager.nextId = nextId;
     }
 }
