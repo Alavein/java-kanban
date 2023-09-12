@@ -2,6 +2,8 @@ package tests;
 
 import manager.HistoryManager;
 import manager.TaskManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Status;
@@ -22,7 +24,25 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected Task task;
     protected Epic epic;
     protected SubTask subTask;
+    protected SubTask subTask1;
     protected HistoryManager historyManager;
+
+/*    @BeforeEach
+    void makeTaskEpicAndSubTasks() {
+        Task task = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
+        taskManager.makeNewTask(task);
+        Epic epic = new Epic("Epic title", "Epic content", Status.NEW);
+        taskManager.makeNewEpic(epic);
+        SubTask subTask = new SubTask("SubTask title", "SubTask content", Status.NEW, 1);
+        SubTask subTask1 = new SubTask("SubTask title", "SubTask content", Status.NEW, 2);
+        taskManager.makeNewSubTask(subTask);
+        taskManager.makeNewSubTask(subTask1);
+
+        При попытке вынести создание таска, эпика и сабтасков в метод, который бы использовался перед каждым тестом
+        почему-то сломалось вообще все( Причем настолько, что я даже не могу понять, из-за чего. Оставила создание
+        внутри тестов, чтобы все просто работало. Возможно, Вы подскажете, почему ломаются тесты. Наверное,
+        я не увидела что-то очевидное или просто не до конца поняла суть работы методов.
+    }*/
 
     @Test
     void shouldMakeNewTask() {
@@ -48,8 +68,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         tasks.put(task.getId(), task);
 
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-
-
     }
 
     @Test
@@ -139,7 +157,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         epic.setStatus(Status.DONE);
 
         assertEquals(Status.DONE, epic.getStatus(), "Статус не изменился.");
-
     }
 
     @Test
@@ -193,7 +210,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(subTaskList.get(id), "Задача на возвращается.");
         assertEquals(subTaskList.get(id), subTask, "Задачи не совпадают.");
-
     }
 
     @Test
@@ -232,8 +248,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         subTaskList.remove(subTask1.getId());
 
         assertEquals(1, subTaskList.size(), "Задача не была удалена.");
-
-
     }
 
     @Test
@@ -243,7 +257,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         subTasks.put(subTask.getId(), subTask);
 
         assertEquals(1, subTasks.size(), "Неверное количество задач.");
-
     }
 
     @Test

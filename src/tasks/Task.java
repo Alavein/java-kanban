@@ -10,10 +10,9 @@ public class Task {
     protected String title;
     protected String content;
     protected Status status;
-    private Type type = Type.TASK;
     protected LocalDateTime startTime;
     protected Duration duration;
-    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public Task(String title, String content, Status status) {
         this.title = title;
@@ -21,7 +20,12 @@ public class Task {
         this.status = status;
     }
 
-    public Task() {
+    public Task(String title, String content, Status status, LocalDateTime startTime, Duration duration) {
+        this.title = title;
+        this.content = content;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -49,11 +53,11 @@ public class Task {
     }
 
     public Type getType() {
-        return type;
+        return Type.TASK;
     }
 
     public String getStartTime() {
-        return startTime.format(formatter);
+        return startTime.format(FORMATTER);
     }
 
     public long getDuration() {
@@ -61,15 +65,15 @@ public class Task {
     }
 
     public String getEndTime() {
-        return startTime.plus(duration).format(formatter);
+        return startTime.plus(duration).format(FORMATTER);
     }
 
     public DateTimeFormatter getFormatter() {
-        return formatter;
+        return FORMATTER;
     }
 
     public void setStartTime(String startTime) {
-        this.startTime = LocalDateTime.parse(startTime, formatter);
+        this.startTime = LocalDateTime.parse(startTime, FORMATTER);
     }
 
     public void setDuration(long duration) {
@@ -95,11 +99,12 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return id == task.id && Objects.equals(title, task.title) && Objects.equals(content, task.content)
-                && Objects.equals(status, task.status);
+                && Objects.equals(status, task.status) && Objects.equals(startTime, task.startTime)
+                && Objects.equals(duration, task.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, status);
+        return Objects.hash(id, title, content, status, startTime, duration);
     }
 }

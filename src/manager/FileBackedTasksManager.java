@@ -40,7 +40,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static FileBackedTasksManager loadFromFile(File FILE) {
         List<String> stringsWithTasks = new ArrayList<>();
-        FileBackedTasksManager manager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
+        FileBackedTasksManager manager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/src/resources/tasks.txt");
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILE, StandardCharsets.UTF_8))) {
             while (bufferedReader.ready()) {
@@ -119,8 +119,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String[] newTask = value.split(", ");
         Task result = null;
 
-        if (Type.getEnumType(newTask[1]) != null) {
-            switch (Type.getEnumType(newTask[1])) {
+            switch (Type.valueOf(newTask[1])) {
                 case TASK:
                     result = new Task(newTask[2], newTask[3], Status.getEnum(newTask[4]));
                     result.setId(Integer.parseInt(newTask[0]));
@@ -134,10 +133,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                     result.setId(Integer.parseInt(newTask[0]));
                     break;
                 default:
-                    result = new Task();
-                    break;
+                    throw new ManagerSaveException("Задачи такого типа не предусмотрены.");
             }
-        }
         return result;
     }
 

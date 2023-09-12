@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, SubTask> subTasks = new HashMap<>();
     protected Map<Integer, Epic> epics = new HashMap<>();
 
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    protected HistoryManager historyManager = Managers.getDefaultHistory();
 
 
     private final Comparator<Task> comparator = (o1, o2) -> {
@@ -40,16 +40,9 @@ public class InMemoryTaskManager implements TaskManager {
         for (Task taskSort : tasksSorted) {
             LocalDateTime startTimeTask = LocalDateTime.parse(taskSort.getStartTime(), taskSort.getFormatter());
             LocalDateTime endTimeTask = LocalDateTime.parse(taskSort.getEndTime(), taskSort.getFormatter());
-            if (startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask)) {
-                result = 1;
-            }
-            if (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask)) {
-                result = 1;
-            }
-            if (startTime.equals(startTimeTask)) {
-                result = 1;
-            }
-            if (endTime.equals(endTimeTask)) {
+            if ((startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask))
+                    || (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask))
+                    || startTime.equals(startTimeTask) || endTime.equals(endTimeTask)) {
                 result = 1;
             }
         }
@@ -225,6 +218,7 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    @Override
     public void addToHistory(int id) {
         if (tasks.containsKey(id)) {
             historyManager.addToHistoryTask(tasks.get(id));
@@ -235,7 +229,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public static void setGenerateId(int nextId) {
+    protected static void setGenerateId(int nextId) {
         InMemoryTaskManager.nextId = nextId;
     }
 

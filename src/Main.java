@@ -64,7 +64,7 @@ public class Main {
         System.out.println(taskManager.getHistory());*/
 
 
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/tasks.txt");
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/src/resources/tasks.txt");
         Epic epicTask = new Epic("Путешествие", "Поездка в Португалию", Status.NEW);
         fileBackedTasksManager.makeNewEpic(epicTask);
         SubTask subtask1 = new SubTask("Составить список вещей", "Купить все по списку", Status.NEW, 3);
@@ -99,7 +99,7 @@ public class Main {
         fileBackedTasksManager.getHistory();
 
 
-        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("/Users/canta/dev/java-kanban/tasks.txt"));
+        FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("/Users/canta/dev/java-kanban/src/resources/tasks.txt"));
         fileBackedTasksManager2.getHistory();
         System.out.println(fileBackedTasksManager2.getEpicList());
         System.out.println(fileBackedTasksManager2.getSubtaskList());

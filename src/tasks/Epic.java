@@ -9,7 +9,6 @@ public class Epic extends Task {
 
     private ArrayList<Integer> subTaskIds = new ArrayList<>();
     private HashMap<Integer, SubTask> subTasks = new HashMap<>();
-    private Type type = Type.EPIC;
 
     public Epic(String title, String content, Status status) {
         super(title, content, status);
@@ -23,8 +22,9 @@ public class Epic extends Task {
         this.subTaskIds = subTaskId;
     }
 
+    @Override
     public Type getType() {
-        return type;
+        return Type.EPIC;
     }
 
     public ArrayList<SubTask> getSubTasks() {
@@ -40,12 +40,11 @@ public class Epic extends Task {
         for (SubTask subTask : getSubTasks()) {
             AllDuration += subTask.getDuration();
             if (this.startTime == null || this.startTime.isAfter(subTask.startTime)) {
-                this.startTime = LocalDateTime.parse(subTask.getStartTime(), formatter);
+                this.startTime = LocalDateTime.parse(subTask.getStartTime(), FORMATTER);
             }
         }
         this.duration = Duration.ofMinutes(AllDuration);
     }
-
 
     @Override
     public String toString() {

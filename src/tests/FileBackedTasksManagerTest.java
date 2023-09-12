@@ -20,8 +20,8 @@ import static manager.FileBackedTasksManager.loadFromFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-    String path = "/Users/canta/dev/java-kanban/tests.txt";
-    File file = new File(path);
+    protected String path = "/Users/canta/dev/java-kanban/src/resources/tests.txt";
+    protected File file = new File(path);
 
     @BeforeEach
     void setUp() {
@@ -29,12 +29,8 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     }
 
     @AfterEach
-    public void afterEach() {
-        try {
+    public void afterEach() throws IOException {
             Files.delete(Path.of(path));
-        } catch (IOException exception) {
-            System.out.println(exception.getMessage());
-        }
     }
 
     @Test
