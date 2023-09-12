@@ -1,10 +1,14 @@
 package tasks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Epic extends Task {
 
     private ArrayList<Integer> subTaskIds = new ArrayList<>();
+    private HashMap<Integer, SubTask> subTasks = new HashMap<>();
     private Type type = Type.EPIC;
 
     public Epic(String title, String content, Status status) {
@@ -23,6 +27,25 @@ public class Epic extends Task {
         return type;
     }
 
+    public ArrayList<SubTask> getSubTasks() {
+        return new ArrayList<>(subTasks.values());
+    }
+
+    public void putSubTask(int id, SubTask subTask) {
+        this.subTasks.put(id, subTask);
+    }
+
+    public void countTime() {
+        long AllDuration = 0;
+        for (SubTask subTask : getSubTasks()) {
+            AllDuration += subTask.getDuration();
+            if (this.startTime == null || this.startTime.isAfter(subTask.startTime)) {
+                this.startTime = LocalDateTime.parse(subTask.getStartTime(), formatter);
+            }
+        }
+        this.duration = Duration.ofMinutes(AllDuration);
+    }
+
 
     @Override
     public String toString() {
@@ -31,6 +54,9 @@ public class Epic extends Task {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", status='" + status + '\'' +
+                ", startTime=" + getStartTime() + '\'' +
+                ", duration=" + getDuration() + '\'' +
+                ", endTime=" + getEndTime() + '\'' +
                 '}';
     }
 }

@@ -5,10 +5,8 @@ import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int nextId = 1;
@@ -18,6 +16,47 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Epic> epics = new HashMap<>();
 
     HistoryManager historyManager = Managers.getDefaultHistory();
+
+
+    private final Comparator<Task> comparator = (o1, o2) -> {
+        if (LocalDateTime.parse(o1.getStartTime(), o1.getFormatter())
+                .isAfter(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
+            return 1;
+        } else if (LocalDateTime.parse(o1.getStartTime(), o2.getFormatter())
+                .isBefore(LocalDateTime.parse(o2.getStartTime(), o2.getFormatter()))) {
+            return -1;
+        } else {
+            return 0;
+        }
+    };
+
+    private final Set<Task> tasksSorted = new TreeSet<>(comparator);
+
+    private void validate(Task task) {
+        LocalDateTime startTime = LocalDateTime.parse(task.getStartTime(), task.getFormatter());
+        LocalDateTime endTime = LocalDateTime.parse(task.getEndTime(), task.getFormatter());
+        int result = 0;
+
+        for (Task taskSort : tasksSorted) {
+            LocalDateTime startTimeTask = LocalDateTime.parse(taskSort.getStartTime(), taskSort.getFormatter());
+            LocalDateTime endTimeTask = LocalDateTime.parse(taskSort.getEndTime(), taskSort.getFormatter());
+            if (startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask)) {
+                result = 1;
+            }
+            if (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask)) {
+                result = 1;
+            }
+            if (startTime.equals(startTimeTask)) {
+                result = 1;
+            }
+            if (endTime.equals(endTimeTask)) {
+                result = 1;
+            }
+        }
+        if (result == 1) {
+            throw new ManagerSaveException("Ошибка: Задача пересекается между собой.");
+        }
+    }
 
     @Override
     public int makeNewTask(Task task) {
@@ -172,7 +211,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubTask(SubTask subTask) {
+    public void updateSubTask(int id, SubTask subTask, Status status) {
         subTasks.put(subTask.getId(), subTask);
 
         int epicId = subTask.getEpicId();
@@ -187,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void addToHistory(int id) {
-        if(tasks.containsKey(id)) {
+        if (tasks.containsKey(id)) {
             historyManager.addToHistoryTask(tasks.get(id));
         } else if (epics.containsKey(id)) {
             historyManager.addToHistoryTask(epics.get(id));
@@ -199,4 +238,11 @@ public class InMemoryTaskManager implements TaskManager {
     public static void setGenerateId(int nextId) {
         InMemoryTaskManager.nextId = nextId;
     }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        return tasksSorted;
+    }
+
+
 }

@@ -25,6 +25,9 @@ public class SubTask extends Task {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", status='" + status + '\'' +
+                ", startTime=" + getStartTime() + '\'' +
+                ", duration=" + getDuration() + '\'' +
+                ", endTime=" + getEndTime() + '\'' +
                 '}';
     }
 }

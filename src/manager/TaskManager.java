@@ -1,10 +1,12 @@
 package manager;
 
 import tasks.Epic;
+import tasks.Status;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -42,7 +44,9 @@ public interface TaskManager {
 
     void deleteSubTasksById(int id);
 
-    void updateSubTask(SubTask subTask);
+    void updateSubTask(int id, SubTask subTask, Status status);
 
     List<Task> getHistory();
+
+    Set<Task> getPrioritizedTasks();
 }
