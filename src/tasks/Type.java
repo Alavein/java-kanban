@@ -4,11 +4,11 @@ public enum Type {
 
     private String type;
 
-    private void GetType(String type) {
+    private void getTypeEnum(String type) {
         this.type = type;
     }
 
-    public String GetType() {
+    public String getType() {
         return type;
     }
 }

@@ -35,7 +35,6 @@ public class InMemoryTaskManager implements TaskManager {
     private void validate(Task task) {
         LocalDateTime startTime = LocalDateTime.parse(task.getStartTime(), task.getFormatter());
         LocalDateTime endTime = LocalDateTime.parse(task.getEndTime(), task.getFormatter());
-        int result = 0;
 
         for (Task taskSort : tasksSorted) {
             LocalDateTime startTimeTask = LocalDateTime.parse(taskSort.getStartTime(), taskSort.getFormatter());
@@ -43,11 +42,8 @@ public class InMemoryTaskManager implements TaskManager {
             if ((startTime.isAfter(startTimeTask) && startTime.isBefore(endTimeTask))
                     || (endTime.isAfter(startTimeTask) && endTime.isBefore(endTimeTask))
                     || startTime.equals(startTimeTask) || endTime.equals(endTimeTask)) {
-                result = 1;
+                throw new ManagerSaveException("Ошибка: Задача пересекается между собой.");
             }
-        }
-        if (result == 1) {
-            throw new ManagerSaveException("Ошибка: Задача пересекается между собой.");
         }
     }
 
@@ -237,6 +233,4 @@ public class InMemoryTaskManager implements TaskManager {
     public Set<Task> getPrioritizedTasks() {
         return tasksSorted;
     }
-
-
 }
