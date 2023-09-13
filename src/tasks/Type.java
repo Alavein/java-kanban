@@ -4,7 +4,7 @@ public enum Type {
 
     private String type;
 
-    private void getTypeEnum(String type) {
+    private void setType(String type) {
         this.type = type;
     }
 
