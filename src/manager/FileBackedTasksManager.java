@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private File file;
+    private String file;
     private static final String HEADER = "id, type, name, description, status, epic";
 
-    public FileBackedTasksManager(String path) {
+    public FileBackedTasksManager(String file) {
         super();
-        this.file = new File(path);
+        this.file = "src/resources/" + file;;
     }
 
     public void save() {
@@ -119,22 +119,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String[] newTask = value.split(", ");
         Task result = null;
 
-            switch (Type.valueOf(newTask[1])) {
-                case TASK:
-                    result = new Task(newTask[2], newTask[3], Status.getEnum(newTask[4]));
-                    result.setId(Integer.parseInt(newTask[0]));
-                    break;
-                case SUBTASK:
-                    result = new SubTask(newTask[2], newTask[3], Status.getEnum(newTask[4]), Integer.parseInt(newTask[5]));
-                    result.setId(Integer.parseInt(newTask[0]));
-                    break;
-                case EPIC:
-                    result = new Epic(newTask[2], newTask[3], Status.getEnum(newTask[4]));
-                    result.setId(Integer.parseInt(newTask[0]));
-                    break;
-                default:
-                    throw new ManagerSaveException("Задачи такого типа не предусмотрены.");
-            }
+        switch (Type.valueOf(newTask[1])) {
+            case TASK:
+                result = new Task(newTask[2], newTask[3], Status.getEnum(newTask[4]));
+                result.setId(Integer.parseInt(newTask[0]));
+                break;
+            case SUBTASK:
+                result = new SubTask(newTask[2], newTask[3], Status.getEnum(newTask[4]), Integer.parseInt(newTask[5]));
+                result.setId(Integer.parseInt(newTask[0]));
+                break;
+            case EPIC:
+                result = new Epic(newTask[2], newTask[3], Status.getEnum(newTask[4]));
+                result.setId(Integer.parseInt(newTask[0]));
+                break;
+            default:
+                throw new ManagerSaveException("Задачи такого типа не предусмотрены.");
+        }
         return result;
     }
 
@@ -188,6 +188,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public void deleteSubTasksById(int id) {
         super.deleteSubTasksById(id);
+        save();
+    }
+
+    @Override
+    public void deleteTaskById(int id) {
+        super.deleteTaskById(id);
         save();
     }
 

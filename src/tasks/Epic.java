@@ -32,6 +32,14 @@ public class Epic extends Task {
         return new ArrayList<>(subTasks.values());
     }
 
+    public HashMap<Integer, SubTask> getHashMapSubTask() {
+        return subTasks;
+    }
+
+    public void setSubTasks(HashMap<Integer, SubTask> subTasks) {
+        this.subTasks = subTasks;
+    }
+
     public void putSubTask(int id, SubTask subTask) {
         this.subTasks.put(id, subTask);
     }

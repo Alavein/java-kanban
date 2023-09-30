@@ -44,7 +44,11 @@ public interface TaskManager {
 
     void deleteSubTasksById(int id);
 
+    void deleteTaskById(int id);
+
     void updateSubTask(int id, SubTask subTask, Status status);
+
+    void updateEpic(int id, Epic epic);
 
     List<Task> getHistory();
 

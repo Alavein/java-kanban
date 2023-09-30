@@ -72,6 +72,22 @@ public class Task {
         return FORMATTER;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
     public void setStartTime(String startTime) {
         this.startTime = LocalDateTime.parse(startTime, FORMATTER);
     }

@@ -1,15 +1,23 @@
 import manager.FileBackedTasksManager;
 import manager.InMemoryTaskManager;
+import server.HttpTaskServer;
+import server.KVServer;
 import tasks.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import static manager.FileBackedTasksManager.loadFromFile;
 
 public class Main {
-    public static void main(String[] args) {
-/*        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+    public static void main(String[] args) throws IOException {
 
+        KVServer server = new KVServer();
+        server.start();
+        HttpTaskServer server1 = new  HttpTaskServer();
+        server1.start();
+
+/*        InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
         Task task1 = new Task("Отправиться путешествовать", "Поехать в другую страну", Status.NEW);
         Task task2 = new Task("Освоить что-то новое", "Научиться водить какой-нибудь транспорт", Status.NEW);
@@ -64,7 +72,8 @@ public class Main {
         System.out.println(taskManager.getHistory());*/
 
 
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/src/resources/tasks.txt");
+
+        /*FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager("/Users/canta/dev/java-kanban/src/resources/tasks.txt");
         Epic epicTask = new Epic("Путешествие", "Поездка в Португалию", Status.NEW);
         fileBackedTasksManager.makeNewEpic(epicTask);
         SubTask subtask1 = new SubTask("Составить список вещей", "Купить все по списку", Status.NEW, 3);
@@ -98,12 +107,10 @@ public class Main {
 
         fileBackedTasksManager.getHistory();
 
-
         FileBackedTasksManager fileBackedTasksManager2 = loadFromFile(new File("/Users/canta/dev/java-kanban/src/resources/tasks.txt"));
         fileBackedTasksManager2.getHistory();
         System.out.println(fileBackedTasksManager2.getEpicList());
         System.out.println(fileBackedTasksManager2.getSubtaskList());
-        System.out.println(fileBackedTasksManager.getTaskList());
-
+        System.out.println(fileBackedTasksManager.getTaskList());*/
     }
 }

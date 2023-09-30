@@ -30,7 +30,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @AfterEach
     public void afterEach() throws IOException {
-            Files.delete(Path.of(path));
+        Files.delete(Path.of(path));
     }
 
     @Test
