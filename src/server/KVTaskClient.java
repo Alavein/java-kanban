@@ -48,8 +48,8 @@ public class KVTaskClient {
             if (response.statusCode() != 200) {
                 throw new ManagerSaveException("При попытке сохранения произошла ошибка." + response.statusCode());
             }
-        } catch (IOException | InterruptedException exception) {
-            throw new ManagerSaveException("Ошибка. Неверный запрос.");
+        } catch (IOException | InterruptedException e) {
+            throw new ManagerSaveException("Ошибка. Неверный запрос." + e.getMessage());
         }
     }
 
@@ -65,8 +65,8 @@ public class KVTaskClient {
             } else {
                 throw new ManagerSaveException("При попытке загрузки произошла ошибка." + response.statusCode());
             }
-        } catch (IOException | InterruptedException exception) {
-            throw new ManagerSaveException("Ошибка. Неверный запрос.");
+        } catch (IOException | InterruptedException e) {
+            throw new ManagerSaveException("Ошибка. Неверный запрос." + e.getMessage());
         }
     }
 }

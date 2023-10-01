@@ -1,14 +1,12 @@
-package server;
+package manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import manager.FileBackedTasksManager;
-import manager.Managers;
+import server.KVTaskClient;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -18,10 +16,10 @@ import java.util.stream.Collectors;
 public class HttpTaskManager extends FileBackedTasksManager {
     private KVTaskClient client;
     private Gson gson;
-    public static final String TASKS_KEY = "tasks";
-    public static final String SUBTASKS_KEY = "subtasks";
-    public static final String EPICS_KEY = "epics";
-    public static final String HISTORY_KEY = "history";
+    private static final String TASKS_KEY = "tasks";
+    private static final String SUBTASKS_KEY = "subtasks";
+    private static final String EPICS_KEY = "epics";
+    private static final String HISTORY_KEY = "history";
 
     public HttpTaskManager(String host, int port) {
         super(null);
