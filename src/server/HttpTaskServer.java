@@ -19,15 +19,15 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class HttpTaskServer {
+    private static final String HTTP_METHOD_GET = "GET";
+    private static final String HTTP_METHOD_POST = "POST";
+    private static final String HTTP_METHOD_DELETE = "DELETE";
+
     public static final int PORT = 8080;
     private final HttpServer server;
     private final HttpTaskManager manager;
     private final Gson gson;
     private final Gson gsonNoAdapter;
-
-    private static final String HTTP_METHOD_GET = "GET";
-    private static final String HTTP_METHOD_POST = "POST";
-    private static final String HTTP_METHOD_DELETE = "DELETE";
 
     public HttpTaskServer() throws IOException {
         this.server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
